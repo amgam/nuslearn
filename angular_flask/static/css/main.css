@@ -4,6 +4,10 @@
 	margin-bottom: 0;
 }
 
+#username {
+	font-size: 1em;
+}
+
 .masthead h1 {
 	font-size: 75px;
 	line-height: 1;

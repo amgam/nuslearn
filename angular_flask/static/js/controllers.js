@@ -2,39 +2,58 @@
 
 /* Controllers */
 
-function IndexController($scope, $window, $location) {
-	alert('index');
+function IndexController($scope, $window, $location, $rootScope) {
+	// alert('index');
 	$scope.title = "nuslearn";
 
-	$scope.login = function() {
-		alert("Loggin");
+	$rootScope.login = function() {
+		// alert("Loggin");
 
-	var apiKey = "yWIyIVdgoDbQz9EUdJ06x";
-	var lapiURL = "https://ivle.nus.edu.sg/api/login/?apikey=";
-	var appURL = "http://0.0.0.0:5000/loginProxy";
-	var loginURL = lapiURL + apiKey + "&url=" + appURL;
-	//
-	$window.location.replace(loginURL);
+		var apiKey = "yWIyIVdgoDbQz9EUdJ06x";
+		var lapiURL = "https://ivle.nus.edu.sg/api/login/?apikey=";
+		var appURL = "http://0.0.0.0:5000/loginProxy";
+		var loginURL = lapiURL + apiKey + "&url=" + appURL;
+		//
+		$window.location.replace(loginURL);
 	};
 }
 
-function LoginProxyController($scope, $routeParams, $location, $localStorage) {
-	alert('logged in!');
+function LoginProxyController($rootScope, $routeParams, $location, $localStorage) {
+	// alert('logged in!');
 	// var t = $routeParams.accessToken;
 	$localStorage.token = $location.search().token
+	$rootScope.buttonTitle = "Logout";
 	$location.path('/loggedIn');
 
 	// console.log("DONE");
 }
 
-function LoginController($scope, $localStorage, $location){
-	console.log($localStorage.token);
-	console.log("success");
+function LoginController($rootScope, $localStorage, $location, $http, $scope){
+	// console.log($localStorage.token);
+	// console.log("success");
 
-	$scope.logout = function(){
-		delete $localStorage.token;
-		$location.path('/');
-	};
+	$http.get("/getusername")
+	.success(function(response) {
+		// alert(response);
+		$rootScope.username = response.replace(/['"]+/g, '').toLowerCase();
+	});
+
+	if($localStorage.token){
+		// $rootScope.buttonTitle = "Logout";
+		$rootScope.login = function(){
+			delete $localStorage.token;
+			$rootScope.username = "";
+			$rootScope.buttonTitle = "Login";
+			$location.path('/');
+		};
+	}else{
+		$rootScope.buttonTitle = "Login";
+	}
+
+	// if($rootScope.buttonTitle == "Logout"){
+	//
+	// }
+
 }
 
 function PostListController($scope, Post) {

@@ -1,4 +1,7 @@
 import os
+import signal
+import sys
+import time
 
 from flask import Flask, request, Response
 from flask import render_template, url_for, redirect, send_from_directory
@@ -6,17 +9,44 @@ from flask import send_file, make_response, abort
 
 from angular_flask import app
 
+####### CUSTOM CLASSES & DATA ######
+from learner import Learner
+from dbase import DBase
+
+current_user = None
+dbase = DBase()
+
+""" use sql styled select statements"""
+# dbase.insert(
+#         """insert into user (name, links)
+#            values ("amit", "youtube.com")
+#         """)
+# #
+# print dbase.retrieve(
+#         """
+#                 select * from user
+#                 """)
+
+### SAVE DB BEFORE EXITING #######
+def signal_handler(signal, frame):
+    dbase.save()
+    print 'quit.'
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+########## NOT IN USE ############
 # routing for API endpoints, generated from the models designated as API_MODELS
-from angular_flask.core import api_manager
-from angular_flask.models import *
+# from angular_flask.core import api_manager
+# from angular_flask.models import *
 
-for model_name in app.config['API_MODELS']:
-    model_class = app.config['API_MODELS'][model_name]
-    api_manager.create_api(model_class, methods=['GET', 'POST'])
+#
+# for model_name in app.config['API_MODELS']:
+#     model_class = app.config['API_MODELS'][model_name]
+#     api_manager.create_api(model_class, methods=['GET', 'POST'])
+# session = api_manager.session
 
-session = api_manager.session
-
-
+####### ROUTING ###########
 # routing for basic pages (pass routing onto the Angular app)
 @app.route('/')
 def index():
@@ -24,40 +54,23 @@ def index():
 
 @app.route('/loginProxy')
 def loggedProxy():
-    print "loggedIn"
-    token = request.args.get('token')
-    print token
+    print "loggedInproxy"
+    token = request.args.get('token') #extract token
+
+    global current_user
+    current_user = Learner(token)
     return make_response(open('angular_flask/templates/index.html').read())
 
 @app.route('/loggedIn')
 def loggedIn():
     print "loggedIn"
-    token = request.args.get('token')
-    print token
-    return make_response(open('angular_flask/templates/index.html').read())#
-# @app.route('/blog')
-# def basic_pages(**kwargs):
-#     return make_response(open('angular_flask/templates/index.html').read())
-#
-#
-# # routing for CRUD-style endpoints
-# # passes routing onto the angular frontend if the requested resource exists
-# from sqlalchemy.sql import exists
-#
-# crud_url_models = app.config['CRUD_URL_MODELS']
-#
-#
-# @app.route('/<model_name>/')
-# @app.route('/<model_name>/<item_id>')
-# def rest_pages(model_name, item_id=None):
-#     if model_name in crud_url_models:
-#         model_class = crud_url_models[model_name]
-#         if item_id is None or session.query(exists().where(
-#                 model_class.id == item_id)).scalar():
-#             return make_response(open(
-#                 'angular_flask/templates/index.html').read())
-#     abort(404)
+    # token = request.args.get('token')
+    # print token
+    return make_response(open('angular_flask/templates/index.html').read())
 
+@app.route('/getusername', methods=['GET'])
+def get_username():
+    return current_user.get_username()
 
 # special file handlers and error handlers
 @app.route('/favicon.ico')

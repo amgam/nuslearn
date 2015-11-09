@@ -1,0 +1,17 @@
+{
+  "name": "bower.json",
+  "authors": [
+    "Amit <dragnoth46@gmail.com>"
+  ],
+  "description": "json",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "dependencies": {
+    "AngularJS-OAuth2": "angularjs-oauth2#*",
+    "oauth-ng": "~0.4.2",
+    "angular-md5": "~0.1.8"
+  }
+}
