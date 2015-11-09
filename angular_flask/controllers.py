@@ -20,14 +20,21 @@ session = api_manager.session
 # routing for basic pages (pass routing onto the Angular app)
 @app.route('/')
 def index():
-    return send_file('templates/index.html')
-# @app.route('/loggedIn')
-# def loggedIn():
-#     print "loggedIn"
-#     token = request.args.get('token')
-#     print token
-#     return make_response(open('angular_flask/templates/index.html').read())
-#
+    return make_response(open('angular_flask/templates/index.html').read())
+
+@app.route('/loginProxy')
+def loggedProxy():
+    print "loggedIn"
+    token = request.args.get('token')
+    print token
+    return make_response(open('angular_flask/templates/index.html').read())
+
+@app.route('/loggedIn')
+def loggedIn():
+    print "loggedIn"
+    token = request.args.get('token')
+    print token
+    return make_response(open('angular_flask/templates/index.html').read())#
 # @app.route('/blog')
 # def basic_pages(**kwargs):
 #     return make_response(open('angular_flask/templates/index.html').read())
