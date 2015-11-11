@@ -50,9 +50,11 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope){
 		$rootScope.buttonTitle = "Login";
 	}
 
-	// if($rootScope.buttonTitle == "Logout"){
-	//
-	// }
+	$scope.isSearch = true;
+
+	$scope.chooseThis = function() {
+		$scope.isActive = !$scope.isActive;
+	};
 
 }
 

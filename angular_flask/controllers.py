@@ -16,10 +16,18 @@ from dbase import DBase
 current_user = None
 dbase = DBase()
 
-""" use sql styled select statements"""
+# print dbase.retrieve("select * from modules")
+
+print dbase.retrieve("select * from modules where module_code=\"MA1505\"")
+# print dbase.retrieve("select * from modules where module_code=\"GEM1902B\"")
+# print dbase.retrieve("select * from modules where module_code=\"UTC1102B\"")
+
+
+
+# """ use sql styled select statements"""
 # dbase.insert(
 #         """insert into user (name, links)
-#            values ("amit", "youtube.com")
+#            values ("trish", "yt.com")
 #         """)
 # #
 # print dbase.retrieve(

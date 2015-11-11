@@ -1,5 +1,6 @@
 import os
 import sqlite3
+import json
 
 class DBase:
     def __init__(self):
@@ -15,6 +16,7 @@ class DBase:
 
 
     def init_schema(self):
+        print "init db"
         self.schema_filename = "schema.sql"
         self.schema_path = os.getcwd() + self.file_path + self.schema_filename
 
@@ -22,6 +24,17 @@ class DBase:
                 self.schema = f.read()
 
         self.conn.executescript(self.schema)
+
+        #schema now exists
+
+        #read in module listings
+        jsonPath = os.getcwd() + self.file_path + "moduleList.json"
+        with open(jsonPath) as json_file:
+            modules = json.load(json_file)
+
+        #populate db
+        parsed_modules = map(lambda x: (x["ModuleCode"], x["ModuleTitle"]), modules) #parses into tuple format
+        self.conn.executemany('insert into modules values (?,?)', parsed_modules)
 
 
     def connect(self):
