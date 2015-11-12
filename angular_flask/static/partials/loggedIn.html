@@ -15,5 +15,52 @@
   </div>
 </div>
 <div class="ui bottom attached segment">
-  <p></p>
+  <!-- this is for searching -->
+  <div ng-if="isSearch">
+    <p ng-repeat="(code, name) in modules">{{code}} - {{name}} </p>
+
+    <div class="ui link stackable cards">
+  <div class="card" ng-repeat="vid in raw_links">
+    <div class="video-container">
+      <div class="fluid embed-responsive embed-responsive-16by9">
+        <iframe class="embed-responsive-item" ng-src="{{vid.link | trustUrl}}"> </iframe>
+      </div>
+    </div>
+    <div class="content">
+      <div class="header">{{vid.title}}</div>
+      <div class="meta">
+        <a>{{vid.module}}</a>
+      </div>
+      <div class="description">
+        {{vid.desc}}
+      </div>
+    </div>
+    <div class="extra content">
+      <span class="right floated">
+        <i class="thumbs up icon"></i>
+        <i class="thumbs down icon"></i>
+      </span>
+      <span>
+        <i class="star icon"></i>
+        {{vid.votes}} votes
+      </span>
+    </div>
+  </div>
+</div>
+      <!-- youtube video structure-->
+      <!-- <div class="row">
+      <div class="col-xs-6 col-md-3" ng-repeat="link in ytlinks">
+      <div class="embed-responsive embed-responsive-16by9">
+      <iframe class="embed-responsive-item" ng-src="{{link}}"> </iframe>
+    </div>
+  </div>
+</div> -->
+
+
+
+
+</div>
+
+<!-- this is for suggesting modules -->
+<p ng-if="!isSearch">testing245</p>
 </div>

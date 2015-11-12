@@ -28,14 +28,29 @@ function LoginProxyController($rootScope, $routeParams, $location, $localStorage
 	// console.log("DONE");
 }
 
-function LoginController($rootScope, $localStorage, $location, $http, $scope){
+function LoginController($rootScope, $localStorage, $location, $http, $scope, $sce){
 	// console.log($localStorage.token);
 	// console.log("success");
 
+	//get username
 	$http.get("/getusername")
 	.success(function(response) {
-		// alert(response);
 		$rootScope.username = response.replace(/['"]+/g, '').toLowerCase();
+	});
+
+	//example!
+	$scope.raw_links = [
+		{"title": "hysteria", "module": "music", "desc": "bassss", "link": "https://www.youtube.com/embed/0FECUG7k5gY", "votes" : 15},
+		{"title": "bass less", "module": "music", "desc": "slap bass", "link": "https://www.youtube.com/embed/4PKqsRseid8", "votes": 32},
+		{"title": "505", "module": "music", "desc": "505 live", "link": "https://www.youtube.com/embed/aZv8tmvCGPE", "votes" : 100}
+	];
+
+	//get user modules
+	$http.get("/getmodules")
+	.success(function(response) {
+		// console.log(response["CS2108"]);
+		$scope.modules = response;
+		// $rootScope.username = response.replace(/['"]+/g, '').toLowerCase();
 	});
 
 	if($localStorage.token){
@@ -53,19 +68,7 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope){
 	$scope.isSearch = true;
 
 	$scope.chooseThis = function() {
-		$scope.isActive = !$scope.isActive;
+		$scope.isSearch = !$scope.isSearch;
 	};
 
-}
-
-function PostListController($scope, Post) {
-	var postsQuery = Post.get({}, function(posts) {
-		$scope.posts = posts.objects;
-	});
-}
-
-function PostDetailController($scope, $routeParams, Post) {
-	var postQuery = Post.get({ postId: $routeParams.postId }, function(post) {
-		$scope.post = post;
-	});
 }

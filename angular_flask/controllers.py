@@ -18,7 +18,7 @@ dbase = DBase()
 
 # print dbase.retrieve("select * from modules")
 
-print dbase.retrieve("select * from modules where module_code=\"MA1505\"")
+print dbase.retrieve("select * from modules where module_code=\"ACC1002\"")
 # print dbase.retrieve("select * from modules where module_code=\"GEM1902B\"")
 # print dbase.retrieve("select * from modules where module_code=\"UTC1102B\"")
 
@@ -94,6 +94,10 @@ def loggedIn():
 @app.route('/getusername', methods=['GET'])
 def get_username():
     return current_user.get_username()
+
+@app.route('/getmodules', methods=['GET'])
+def get_mods():
+    return current_user.get_modules()
 
 # special file handlers and error handlers
 @app.route('/favicon.ico')
