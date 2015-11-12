@@ -1,9 +1,9 @@
-create table modules (
+create table ModuleTable (
   module_code text primary key,
   module_name text
 );
 
-create table user (
+create table UserSuggestTable (
     matric      text primary key,
     name        text,
     major       text,
@@ -16,7 +16,7 @@ create table user (
     tags  text
 );
 
-create table global (
+create table SearchByModuleTable (
   module_code text,
   module_name text,
   module_prefix text,
@@ -26,7 +26,7 @@ create table global (
   votes integer
 );
 
-create table concepts (
+create table SearchByTagTable (
   tags text,
   vid_link text,
   votes integer

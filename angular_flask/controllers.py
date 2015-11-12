@@ -85,8 +85,6 @@ def get_username():
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),
                                'img/favicon.ico')
-
-
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
