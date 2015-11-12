@@ -41,15 +41,18 @@ class DBase:
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
 
-    def insert(self, statement, variables):
-        self.conn.execute(statement, variables)
-    # def insert(self, statement):
-    #     self.conn.execute(statement)
+    def insert(self, statement, variables=False):
+        if variables:
+            self.conn.execute(statement, variables)
+        else:
+            self.conn.execute(statement)
 
-    def retrieve(self, statement):
-        self.cursor.execute(statement)
-        return self.cursor.fetchall()
-
+    def retrieve(self, statement, variables=False):
+        if variables:
+            return self.conn.execute(statement, variables)
+        else:
+            return self.conn.execute(statement)
+            
     def save(self):
         print "\nsaved!"
         self.conn.commit()
@@ -66,9 +69,9 @@ class DBase:
                     videolinks = line.split()
                     module_code = videolinks[0]
                     for videolink in videolinks[1:]:
-                        module_name = self.retrieve("select module_name from ModuleTable where module_code=?", module_code)
+                        module_name = self.retrieve("select * from ModuleTable where module_code=?", module_code)
                         module_prefix = filter(str.isalpha, module_code[:-1])
-                        self.insert("insert into GlobalVideoTable (module_code, module_name, module_prefix, vid_link) values (?, ?, ?)", (module_code, module_name, module_prefix, videolink))
+                        self.insert("insert into GlobalVideoTable (module_code, module_name, module_prefix, vid_link) values (?, ?, ?, ?)", (module_code, module_name, module_prefix, videolink))
             print "GlobalVideoTable is populated with data"
         except IOError:
             print "Error: File not found or unreadable file"

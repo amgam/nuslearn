@@ -1,19 +1,15 @@
-import os
-import signal
-import sys
-import time
-
-from flask import Flask, request, Response
-from flask import render_template, url_for, redirect, send_from_directory
-from flask import send_file, make_response, abort
-
-from angular_flask import app
-
-####### CUSTOM CLASSES & DATA ######
-from learner import Learner
-from dbase import DBase
+import requests
 
 class Youtube:
     def __init__(self):
+        self.api_key = "AIzaSyCzYaUgUG6SlJbAo6-gByfwEPwEuTTvgZ0"
 
-    def validation(self, videolink):
+    def retrieveVideoInfo(self, videoLink):
+        # ?id=itemId&key=apiKey&fields=items(snippet(title))&part=snippet
+        request_url = "https://www.googleapis.com/youtube/v3/videos"
+        auth_details = {'id': "0FECUG7k5gY", 'key': self.api_key, 'fields': "items(snippet(title))&part=snippet"}
+
+        resp = requests.get(request_url, params=auth_details)
+        return (resp.text, resp.status_code, resp.headers.items())
+
+    # def validation(self, videolink):

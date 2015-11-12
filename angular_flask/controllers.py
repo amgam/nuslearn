@@ -12,18 +12,20 @@ from angular_flask import app
 ####### CUSTOM CLASSES & DATA ######
 from learner import Learner
 from dbase import DBase
+from youtube import Youtube
 
 current_user = None
 dbase = DBase()
+yt = Youtube()
 
 # print dbase.retrieve("select * from modules")
 
 print dbase.retrieve("select * from ModuleTable where module_code=\"ACC1002\"")
+dbase.populateGlobalVideoTable()
 print dbase.retrieve("select * from GlobalVideoTable where module_code=\"CS1010\"")
+print yt.retrieveVideoInfo("dummy")
 # print dbase.retrieve("select * from modules where module_code=\"GEM1902B\"")
 # print dbase.retrieve("select * from modules where module_code=\"UTC1102B\"")
-
-dbase.populateGlobalVideoTable()
 
 
 # """ use sql styled select statements"""
