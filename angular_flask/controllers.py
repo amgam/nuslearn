@@ -7,7 +7,7 @@ from flask import Flask, request, Response
 from flask import render_template, url_for, redirect, send_from_directory
 from flask import send_file, make_response, abort
 
-from angular_flask import app
+# from angular_flask import app
 
 ####### CUSTOM CLASSES & DATA ######
 from learner import Learner
@@ -34,6 +34,21 @@ print dbase.retrieve("select * from modules where module_code=\"MA1505\"")
 #         """
 #                 select * from user
 #                 """)
+
+# Populate SearchByModuleTable
+def populateSearchByModuleTable():
+    filepath = '../static/training_data/training.txt'
+    try:
+        with open(filepath, 'r') as f:
+            for line in f:
+                tokens = line.split()
+                module_code = tokens[0]
+                for token in tokens[1:]:
+                    dbase.insert("""insert into SearchByModuleTable (module_code, vid_link) 
+                                    values (module_code, token)""")
+    except IOError:
+        print "Error: File not found or unreadable file"
+    f.close()
 
 ### SAVE DB BEFORE EXITING #######
 def signal_handler(signal, frame):
