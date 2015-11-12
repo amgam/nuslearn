@@ -16,7 +16,7 @@ class DBase:
 
 
     def init_schema(self):
-        print "init db"
+        print "Initializing Database"
         self.schema_filename = "schema.sql"
         self.schema_path = os.getcwd() + self.file_path + self.schema_filename
 
@@ -34,23 +34,40 @@ class DBase:
 
         #populate db
         parsed_modules = map(lambda x: (x["ModuleCode"], x["ModuleTitle"]), modules) #parses into tuple format
-        self.conn.executemany('insert into modules values (?,?)', parsed_modules)
+        self.conn.executemany('insert into ModuleTable values (?,?)', parsed_modules)
 
 
     def connect(self):
         self.conn = sqlite3.connect(self.db_path)
         self.cursor = self.conn.cursor()
 
-    def insert(self, statement):
-        self.conn.execute(statement)
+    def insert(self, statement, variables):
+        self.conn.execute(statement, variables)
+    # def insert(self, statement):
+    #     self.conn.execute(statement)
 
     def retrieve(self, statement):
         self.cursor.execute(statement)
         return self.cursor.fetchall()
 
     def save(self):
-        print "saved!"
+        print "\nsaved!"
         self.conn.commit()
 
         # for row in self.cursor.fetchall():
         #     print row
+
+    # Populate GlobalVideoTable
+    def populateGlobalVideoTable(self):
+        filepath = 'angular_flask/static/training_data/training.txt'
+        try:
+            with open(filepath, 'r') as f:
+                for line in f:
+                    tokens = line.split()
+                    module_code = tokens[0]
+                    for token in tokens[1:]:
+                        module_name = self.retrieve("select module_name from ModuleTable where module_code=?", module_code)
+                        self.insert("insert into GlobalVideoTable (module_code, module_name, vid_link) values (?, ?, ?)", (module_code, module_name, token))
+            print "GlobalVideoTable is populated with data"
+        except IOError:
+            print "Error: File not found or unreadable file"

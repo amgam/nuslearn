@@ -16,7 +16,7 @@ create table UserSuggestTable (
     tags  text
 );
 
-create table SearchByModuleTable (
+create table GlobalVideoTable (
   module_code text,
   module_name text,
   module_prefix text,
@@ -26,7 +26,7 @@ create table SearchByModuleTable (
   votes integer
 );
 
-create table SearchByTagTable (
+create table GlobalTagTable (
   tags text,
   vid_link text,
   votes integer

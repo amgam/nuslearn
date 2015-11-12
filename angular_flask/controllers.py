@@ -18,10 +18,12 @@ dbase = DBase()
 
 # print dbase.retrieve("select * from modules")
 
-print dbase.retrieve("select * from modules where module_code=\"ACC1002\"")
+print dbase.retrieve("select * from ModuleTable where module_code=\"ACC1002\"")
+print dbase.retrieve("select * from GlobalVideoTable where module_code=\"CS1010\"")
 # print dbase.retrieve("select * from modules where module_code=\"GEM1902B\"")
 # print dbase.retrieve("select * from modules where module_code=\"UTC1102B\"")
 
+dbase.populateGlobalVideoTable()
 
 
 # """ use sql styled select statements"""
@@ -34,21 +36,6 @@ print dbase.retrieve("select * from modules where module_code=\"ACC1002\"")
 #         """
 #                 select * from user
 #                 """)
-
-# Populate SearchByModuleTable
-def populateSearchByModuleTable():
-    filepath = '../static/training_data/training.txt'
-    try:
-        with open(filepath, 'r') as f:
-            for line in f:
-                tokens = line.split()
-                module_code = tokens[0]
-                for token in tokens[1:]:
-                    dbase.insert("""insert into SearchByModuleTable (module_code, vid_link) 
-                                    values (module_code, token)""")
-    except IOError:
-        print "Error: File not found or unreadable file"
-    f.close()
 
 ### SAVE DB BEFORE EXITING #######
 def signal_handler(signal, frame):
