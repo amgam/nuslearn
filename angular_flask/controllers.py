@@ -22,9 +22,12 @@ yt = Youtube()
 
 print dbase.retrieve("select * from ModuleTable where module_code=\"ACC1002\"")
 dbase.populateGlobalVideoTable()
-print dbase.retrieve("select * from GlobalVideoTable where module_code=\"CS1010\"")
+# print dbase.retrieve("select * from GlobalVideoTable where module_code=\"CS1010\"")
 print
-print yt.retrieveVideoInfo("dummy")
+# print yt.retrieveVideoInfo("https://www.youtube.com/watch?v=bX3jvD7XFPs")
+print yt.retrieveVideoInfo("https://www.youtube.com/watch?v=eBas9H7VmXA")
+print
+# print yt.extractCategory()
 # print dbase.retrieve("select * from modules where module_code=\"GEM1902B\"")
 # print dbase.retrieve("select * from modules where module_code=\"UTC1102B\"")
 
