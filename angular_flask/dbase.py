@@ -63,11 +63,12 @@ class DBase:
         try:
             with open(filepath, 'r') as f:
                 for line in f:
-                    tokens = line.split()
-                    module_code = tokens[0]
-                    for token in tokens[1:]:
+                    videolinks = line.split()
+                    module_code = videolinks[0]
+                    for videolink in videolinks[1:]:
                         module_name = self.retrieve("select module_name from ModuleTable where module_code=?", module_code)
-                        self.insert("insert into GlobalVideoTable (module_code, module_name, vid_link) values (?, ?, ?)", (module_code, module_name, token))
+                        module_prefix = filter(str.isalpha, module_code[:-1])
+                        self.insert("insert into GlobalVideoTable (module_code, module_name, module_prefix, vid_link) values (?, ?, ?)", (module_code, module_name, module_prefix, videolink))
             print "GlobalVideoTable is populated with data"
         except IOError:
             print "Error: File not found or unreadable file"
