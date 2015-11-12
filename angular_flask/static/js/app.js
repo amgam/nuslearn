@@ -1,8 +1,8 @@
 'use strict';
 
-var app = angular.module('AngularFlask', ['angularFlaskServices', 'ngStorage']);
+var app = angular.module('nuslearn', ['angularFlaskServices', 'ngStorage', 'ngRoute']);
 
-app.run(function($rootScope, $window, $localStorage){
+app.run(function($rootScope, $window, $localStorage, $sce){
 	if($localStorage.token){
 		$rootScope.buttonTitle = "Logout";
 	}else{
@@ -20,12 +20,20 @@ app.run(function($rootScope, $window, $localStorage){
 		$window.location.replace(loginURL);
 	};
 
-});
+}).filter('trustUrl', function ($sce) {
+    return function(url) {
+      return $sce.trustAsResourceUrl(url);
+    };
+  });
 
 app.config(['$routeProvider', '$locationProvider',
 function($routeProvider, $locationProvider, $window, $localStorage) {
 
-	$locationProvider.html5Mode(true);
+	$locationProvider.html5Mode({
+		enabled: true,
+		requireBase: false
+	});
+	// $locationProvider.html5Mode(true);
 
 	var checkRoute = function($localStorage, $location) {
 		if ($localStorage.token) {
