@@ -39,20 +39,26 @@ class DBase:
 
     def connect(self):
         self.conn = sqlite3.connect(self.db_path)
+        self.conn.row_factory = sqlite3.Row
         self.cursor = self.conn.cursor()
 
-    def insert(self, statement, variables=False):
+    def insert(self, statement, variables):
         if variables:
-            self.conn.execute(statement, variables)
+            self.cursor.execute(statement, variables)
         else:
-            self.conn.execute(statement)
+            self.cursor.execute(statement)
 
-    def retrieve(self, statement, variables=False):
+    def retrieve(self, statement, variables=False, isSingluar=False):
         if variables:
-            return self.conn.execute(statement, variables)
+            self.cursor.execute(statement, variables)
         else:
-            return self.conn.execute(statement)
-            
+            self.cursor.execute(statement)
+
+        if isSingluar:
+            return self.cursor.fetchone()
+        else:
+            return self.cursor.fetchall()
+
     def save(self):
         print "\nsaved!"
         self.conn.commit()
@@ -69,9 +75,12 @@ class DBase:
                     videolinks = line.split()
                     module_code = videolinks[0]
                     for videolink in videolinks[1:]:
-                        module_name = self.retrieve("select * from ModuleTable where module_code=?", module_code)
+                        module_name = self.retrieve("select module_name from ModuleTable where module_code=?", (module_code,), True)["module_name"]
+                        # print module_name
                         module_prefix = filter(str.isalpha, module_code[:-1])
+                        # print type(module_code), type(module_name), type(module_prefix), type(videolink)
                         self.insert("insert into GlobalVideoTable (module_code, module_name, module_prefix, vid_link) values (?, ?, ?, ?)", (module_code, module_name, module_prefix, videolink))
             print "GlobalVideoTable is populated with data"
+            self.save()
         except IOError:
             print "Error: File not found or unreadable file"
