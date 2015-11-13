@@ -42,10 +42,10 @@
 					</button>
 					<a class="brand" href="/">nuslearn</a>
 					<div class="nav-collapse collapse">
-						<button ng-click="login()" class="pull-right ui youtube button">
-							<i class="youtube icon"></i>
-							{{buttonTitle}}
-						</button>
+						<!-- <button  class="pull-right"> -->
+							<i ng-click="login()" class="pull-right power large icon" ng-class="{'on': logged, 'off': !logged}"></i>
+							<!-- {{buttonTitle}} -->
+						<!-- </button> -->
 						<span class="pull-right">
 							<a class="brand" href="/" id="username">{{username}}</a>
 						</span>

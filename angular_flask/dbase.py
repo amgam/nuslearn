@@ -13,7 +13,7 @@ class DBase:
 
         if self.db_is_new:
             self.init_schema()
-
+            self.populateGlobalVideoTable()
 
     def init_schema(self):
         print "Initializing Database"

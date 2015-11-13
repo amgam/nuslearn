@@ -2,6 +2,7 @@ import os
 import signal
 import sys
 import time
+import json
 
 from flask import Flask, request, Response
 from flask import render_template, url_for, redirect, send_from_directory
@@ -13,20 +14,22 @@ from angular_flask import app
 from learner import Learner
 from dbase import DBase
 from youtube import Youtube
+from suggest import Suggest
 
 current_user = None
 dbase = DBase()
 yt = Youtube()
+suggest = Suggest()
 
 # print dbase.retrieve("select * from modules")
 
 print dbase.retrieve("select * from ModuleTable where module_code=\"ACC1002\"")
-dbase.populateGlobalVideoTable()
 # print dbase.retrieve("select * from GlobalVideoTable where module_code=\"CS1010\"")
 print
 # print yt.retrieveVideoInfo("https://www.youtube.com/watch?v=bX3jvD7XFPs")
-print yt.retrieveVideoInfo("https://www.youtube.com/watch?v=eBas9H7VmXA")
-print
+# print yt.retrieveVideoInfo("https://www.youtube.com/watch?v=eBas9H7VmXA")
+# print yt.retrieveVideoInfo("youtube")
+
 # print yt.extractCategory()
 # print dbase.retrieve("select * from modules where module_code=\"GEM1902B\"")
 # print dbase.retrieve("select * from modules where module_code=\"UTC1102B\"")
@@ -91,6 +94,17 @@ def get_username():
 @app.route('/getmodules', methods=['GET'])
 def get_mods():
     return current_user.get_modules()
+
+@app.route('/suggest', methods=['POST'])
+def suggest_video():
+    print "suggest - Controllers.py"
+    print request.data
+    req = json.loads(request.data)
+    link = req["link"]
+    code = req["code"].upper()
+    tags = req["tags"]
+    global suggest
+    return suggest.validateSuggestion(link, code, tags)
 
 # special file handlers and error handlers
 @app.route('/favicon.ico')

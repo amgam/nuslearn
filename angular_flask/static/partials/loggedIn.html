@@ -7,8 +7,8 @@
   </a>
   <div class="right menu">
     <div class="item">
-      <div class="ui transparent icon input">
-        <input type="text" placeholder="Search users...">
+      <div class="ui transparent icon input" ng-if="isSearch">
+        <input type="text" placeholder="Search...">
         <i class="search link icon"></i>
       </div>
     </div>
@@ -20,47 +20,83 @@
     <p ng-repeat="(code, name) in modules">{{code}} - {{name}} </p>
 
     <div class="ui link stackable cards">
-  <div class="card" ng-repeat="vid in raw_links">
-    <div class="video-container">
-      <div class="fluid embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" ng-src="{{vid.link | trustUrl}}"> </iframe>
+      <div class="card" ng-repeat="vid in raw_links">
+        <div class="video-container">
+          <div class="fluid embed-responsive embed-responsive-16by9">
+            <iframe class="embed-responsive-item" ng-src="{{vid.link | trustUrl}}"> </iframe>
+          </div>
+        </div>
+        <div class="content">
+          <div class="header">{{vid.title}}</div>
+          <div class="meta">
+            <a>{{vid.module}}</a>
+          </div>
+          <div class="description">
+            {{vid.desc}}
+          </div>
+        </div>
+        <div class="extra content">
+          <span class="right floated">
+            <i class="thumbs up icon" ng-click="thumbsup(vid)"></i>
+            <i class="thumbs down icon" ng-click="thumbsdown(vid)"></i>
+          </span>
+          <span>
+            <i class="star icon"></i>
+            {{vid.votes}} votes
+          </span>
+        </div>
       </div>
-    </div>
-    <div class="content">
-      <div class="header">{{vid.title}}</div>
-      <div class="meta">
-        <a>{{vid.module}}</a>
-      </div>
-      <div class="description">
-        {{vid.desc}}
-      </div>
-    </div>
-    <div class="extra content">
-      <span class="right floated">
-        <i class="thumbs up icon"></i>
-        <i class="thumbs down icon"></i>
-      </span>
-      <span>
-        <i class="star icon"></i>
-        {{vid.votes}} votes
-      </span>
     </div>
   </div>
+
+  <!-- this is for suggesting modules -->
+  <div ng-if="!isSearch" class="suggest">
+    <div class="ui attached message">
+  <div class="header">
+Found a great video to share?  </div>
+  <p>Let us know!</p>
 </div>
-      <!-- youtube video structure-->
-      <!-- <div class="row">
-      <div class="col-xs-6 col-md-3" ng-repeat="link in ytlinks">
-      <div class="embed-responsive embed-responsive-16by9">
-      <iframe class="embed-responsive-item" ng-src="{{link}}"> </iframe>
+<form class="ui form attached fluid segment" novalidate>
+  <div class="field">
+    <div class="field">
+      <label>YouTube Link</label>
+      <input placeholder="eg. https://www.youtube.com/watch?v=ZXsQAXx_ao0" type="text" ng-model="submit.link">
+    </div>
+    <div class="field">
+      <label>Module Code</label>
+      <input placeholder="eg. CS1010" type="text" ng-model="submit.code">
     </div>
   </div>
-</div> -->
+  <div class="field">
+    <label>Tags</label>
+    <input placeholder="leave blank if you've no tags to suggest" type="text" ng-model="submit.tags">
+  </div>
 
-
-
-
+  <!-- <div class="inline field">
+    <div class="ui checkbox">
+      <input type="checkbox" id="terms">
+      <label for="terms">I agree to the terms and conditions</label>
+    </div>
+  </div> -->
+  <button ng-disabled="!submit.link || !submit.code" class="ui button" ng-click="suggest()" ng-class="{'youtube': submit.link && submit.code}">
+      <i class="large icons">
+        <i class="youtube play icon"></i>
+        <i class="inverted corner add icon"></i>
+      </i>
+      Suggest Video
+  </button>
+</form>
+<div ng-if="good" class="ui bottom attached success message">
+  <i class="check square icon"></i>
+  Thanks for sharing!
 </div>
-
-<!-- this is for suggesting modules -->
-<p ng-if="!isSearch">testing245</p>
+<div ng-if="modprob" class="ui bottom attached negative message">
+  <i class="warning sign icon"></i>
+  Sorry, that module does not exist! You might want to check it.
+</div>
+<div ng-if="linkprob" class="ui bottom attached negative message">
+  <i class="warning sign icon"></i>
+  Sorry, that link looks invalid! You might want to check it.
+</div>
+  </div>
 </div>

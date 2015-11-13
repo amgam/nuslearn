@@ -29,9 +29,10 @@ function LoginProxyController($rootScope, $routeParams, $location, $localStorage
 }
 
 function LoginController($rootScope, $localStorage, $location, $http, $scope, $sce){
+	$rootScope.logged = true;
+
 	// console.log($localStorage.token);
 	// console.log("success");
-
 	//get username
 	$http.get("/getusername")
 	.success(function(response) {
@@ -58,17 +59,51 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 		$rootScope.login = function(){
 			delete $localStorage.token;
 			$rootScope.username = "";
+			$rootScope.logged = false;
 			$rootScope.buttonTitle = "Login";
 			$location.path('/');
 		};
 	}else{
 		$rootScope.buttonTitle = "Login";
+		$rootScope.logged = true;
 	}
 
 	$scope.isSearch = true;
 
 	$scope.chooseThis = function() {
 		$scope.isSearch = !$scope.isSearch;
+	};
+
+	$scope.submit = {};
+	$scope.submit["tags"] = "";
+
+	$scope.suggest = function() {
+
+		$http({
+			method: 'POST',
+			url: "/suggest",
+			data: $scope.submit,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		}).success(function(response){
+			// $scope.suggestionResponse = response;
+
+			$scope.good = false;
+			$scope.modprob = false;
+			$scope.linkprob = false;
+
+			var msg = response["err"];
+
+			if(msg == "good"){
+				$scope.good = true;
+			}else if(msg == "modprob"){
+				$scope.modprob = true;
+			}else{
+				// link prob
+				$scope.linkprob = true;
+			}
+
+			console.log(response);
+		});
 	};
 
 }
