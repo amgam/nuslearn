@@ -15,11 +15,13 @@ from learner import Learner
 from dbase import DBase
 from youtube import Youtube
 from suggest import Suggest
+from search import Search
 
 current_user = None
 dbase = DBase()
 yt = Youtube()
 suggest = Suggest()
+searcher = Search()
 
 # print dbase.retrieve("select * from modules")
 
@@ -106,6 +108,12 @@ def suggest_video():
     tags = req["tags"]
     global suggest
     return suggest.validateSuggestion(link, code, tags)
+
+@app.route('/search', methods=['POST'])
+def search():
+    searchTerm = json.loads(request.data)["term"]
+    global searcher
+    return searcher.look(searchTerm)
 
 # special file handlers and error handlers
 @app.route('/favicon.ico')
