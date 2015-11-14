@@ -15,6 +15,7 @@ class DBase:
         if self.db_is_new:
             self.init_schema()
             self.populateGlobalVideoTable()
+            self.populateGlobalTagTable()
 
     def init_schema(self):
         print "Initializing Database"
@@ -87,5 +88,21 @@ class DBase:
                         self.insert("insert into GlobalVideoTable (module_code, module_name, module_prefix, vid_link, vid_title, vid_desc, votes) values (?, ?, ?, ?, ?, ?, ?)", (module_code, module_name, module_prefix, vidInfo["vid_id"], vidInfo["title"], vidInfo["description"], 0))
             print "GlobalVideoTable is populated with data"
             self.save()
+        except IOError:
+            print "Error: File not found or unreadable file"
+
+    # Populate GlobalTagTable for testing purposes
+    def populateGlobalTagTable(self):
+        filepath = 'angular_flask/static/training_data/training_tags.txt'
+        try:
+            with open(filepath, 'r') as f:
+                for line in f:
+                    tokens = line.split()
+                    tag = tokens[0]
+                    for token in tokens[1:]:
+                        vid_link = token;
+                        self.insert("insert into GlobalTagTable (tags, vid_link, votes) values (?, ?, ?)", (tag, vid_link, 0))
+            self.save()
+            print "GlobalTagTable is populated with tags (socket, programming, java, network) for CS2105"
         except IOError:
             print "Error: File not found or unreadable file"
