@@ -39,20 +39,20 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 		$rootScope.username = response.replace(/['"]+/g, '').toLowerCase();
 	});
 
-	//example!
-	$scope.raw_links = [
-		{"title": "hysteria", "module": "music", "desc": "bassss", "link": "https://www.youtube.com/embed/0FECUG7k5gY", "votes" : 15},
-		{"title": "bass less", "module": "music", "desc": "slap bass", "link": "https://www.youtube.com/embed/4PKqsRseid8", "votes": 32},
-		{"title": "505", "module": "music", "desc": "505 live", "link": "https://www.youtube.com/embed/aZv8tmvCGPE", "votes" : 100}
-	];
-
 	//get user modules
-	$http.get("/getmodules")
+	$http.get("/getmodulevideos")
 	.success(function(response) {
 		// console.log(response["CS2108"]);
-		$scope.modules = response;
-		// $rootScope.username = response.replace(/['"]+/g, '').toLowerCase();
+		console.log(response);
+		$scope.moduleLinks = response;
 	});
+
+	// //example!
+	// $scope.raw_links = [
+	// 	{"title": "hysteria", "module": "music", "desc": "bassss", "link": "https://www.youtube.com/embed/0FECUG7k5gY", "votes" : 15},
+	// 	{"title": "bass less", "module": "music", "desc": "slap bass", "link": "https://www.youtube.com/embed/4PKqsRseid8", "votes": 32},
+	// 	{"title": "505", "module": "music", "desc": "505 live", "link": "https://www.youtube.com/embed/aZv8tmvCGPE", "votes" : 100}
+	// ];
 
 	if($localStorage.token){
 		// $rootScope.buttonTitle = "Logout";

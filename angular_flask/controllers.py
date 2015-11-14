@@ -23,7 +23,7 @@ suggest = Suggest()
 
 # print dbase.retrieve("select * from modules")
 
-print dbase.retrieve("select * from ModuleTable where module_code=\"ACC1002\"")
+print dbase.retrieve("select * from ModuleTable where module_code=\"UTW1001N\"",False,True)["module_name"]
 # print dbase.retrieve("select * from GlobalVideoTable where module_code=\"CS1010\"")
 print
 # print yt.retrieveVideoInfo("https://www.youtube.com/watch?v=bX3jvD7XFPs")
@@ -91,9 +91,10 @@ def loggedIn():
 def get_username():
     return current_user.get_username()
 
-@app.route('/getmodules', methods=['GET'])
-def get_mods():
-    return current_user.get_modules()
+@app.route('/getmodulevideos', methods=['GET'])
+def get_modvideos():
+    print "getting videos.."
+    return current_user.get_videoinfo()
 
 @app.route('/suggest', methods=['POST'])
 def suggest_video():

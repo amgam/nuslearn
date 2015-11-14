@@ -1,11 +1,13 @@
 import requests
 import json
+from dbase import DBase
 
 class Learner:
 
 
     def __init__(self, token):
-        self.token = token;
+        self.token = token
+        self.db = DBase()
         self.api_key = "yWIyIVdgoDbQz9EUdJ06x"
         self.retrieve_username()
         self.retrieve_matric()
@@ -70,6 +72,33 @@ class Learner:
         self.modules = output
         # print
 
+    def get_videoinfo(self):
+        mods = self.get_modules() #dict
+
+        vidInfo = {}
+
+        for code in mods.keys():
+            #retrieve list of YT links associated with this module code
+            retrieveQuery = "select * from GlobalVideoTable where module_code=? order by votes"
+            list_of_mods = self.db.retrieve(retrieveQuery, (code,)) # is a list of SQLite Rows
+
+            serializable_info = map(lambda entry: {
+                "module_code": entry["module_code"],
+                "module_name": entry["module_name"],
+                "module_prefix": entry["module_prefix"],
+                "vid_link": entry["vid_link"],
+                "vid_title": entry["vid_title"],
+                "vid_desc": entry["vid_desc"],
+                "votes": entry["votes"]
+            }, list_of_mods)
+
+            identifier = self.db.retrieve("select * from ModuleTable where module_code=?", (code,), True)["module_name"]
+
+            vidInfo[code + " - " + identifier] = serializable_info
+
+        return json.dumps(vidInfo)
+
+
     def get_username(self):
         return self.username
 
@@ -77,4 +106,4 @@ class Learner:
         return self.matric
 
     def get_modules(self):
-        return json.dumps(self.modules)
+        return self.modules

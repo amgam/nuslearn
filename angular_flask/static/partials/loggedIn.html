@@ -17,22 +17,38 @@
 <div class="ui bottom attached segment">
   <!-- this is for searching -->
   <div ng-if="isSearch">
-    <p ng-repeat="(code, name) in modules">{{code}} - {{name}} </p>
+    <!-- <p ng-repeat="(code, name) in modules">{{code}} - {{name}} </p> -->
 
-    <div class="ui link stackable cards">
-      <div class="card" ng-repeat="vid in raw_links">
-        <div class="video-container">
-          <div class="fluid embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item" ng-src="{{vid.link | trustUrl}}"> </iframe>
-          </div>
+    <div class="" ng-repeat="(code, vidInfo) in moduleLinks track by $index">
+      <br>
+      <h2>{{code}}</h2>
+      <br>
+
+        <p ng-if="!moduleLinks[code].length" class="novideos">
+          We currently do not have videos for this module. Perhaps you could suggest some!
+        </p>
+
+      <div class="ui link stackable cards">
+        <div class="card" ng-repeat="entry in vidInfo track by $index">
+          <div class="video-container">
+            <div class="fluid embed-responsive embed-responsive-16by9">
+              <!-- <iframe ob-lazytube class="embed-responsive-item" ng-src="{{::entry.vid_link | trustUrl}}"> </iframe> -->
+              <div ob-lazytube="{{::entry.vid_link}}">
+
+              </div>
+            </div>
+            <!-- <div class="youtube" id="LcIytqkbdlo" style="width: 320px; height: 180px;"></div> -->
+            <!-- <div class="youtube-container">
+            <div class="youtube-player" ng-src="{{::entry.vid_link | trustUrl}}"></div>
+          </div> -->
         </div>
         <div class="content">
-          <div class="header">{{vid.title}}</div>
+          <div class="header">{{::entry.vid_title}}</div>
           <div class="meta">
-            <a>{{vid.module}}</a>
+            <a>{{::code}}</a>
           </div>
           <div class="description">
-            {{vid.desc}}
+            {{::entry.vid_desc}}
           </div>
         </div>
         <div class="extra content">
@@ -42,48 +58,52 @@
           </span>
           <span>
             <i class="star icon"></i>
-            {{vid.votes}} votes
+            {{::entry.votes}} votes
           </span>
         </div>
       </div>
+      <br>
+      <hr>
     </div>
   </div>
 
-  <!-- this is for suggesting modules -->
-  <div ng-if="!isSearch" class="suggest">
-    <div class="ui attached message">
-  <div class="header">
-Found a great video to share?  </div>
-  <p>Let us know!</p>
 </div>
-<form class="ui form attached fluid segment" novalidate>
-  <div class="field">
-    <div class="field">
-      <label>YouTube Link</label>
-      <input placeholder="eg. https://www.youtube.com/watch?v=ZXsQAXx_ao0" type="text" ng-model="submit.link">
-    </div>
-    <div class="field">
-      <label>Module Code</label>
-      <input placeholder="eg. CS1010" type="text" ng-model="submit.code">
-    </div>
-  </div>
-  <div class="field">
-    <label>Tags</label>
-    <input placeholder="leave blank if you've no tags to suggest" type="text" ng-model="submit.tags">
-  </div>
 
-  <!-- <div class="inline field">
-    <div class="ui checkbox">
+<!-- this is for suggesting modules -->
+<div ng-if="!isSearch" class="suggest">
+  <div class="ui attached message">
+    <div class="header">
+      Found a great video to share?  </div>
+      <p>Let us know!</p>
+    </div>
+    <form class="ui form attached fluid segment" novalidate>
+      <div class="field">
+        <div class="field">
+          <label>YouTube Link</label>
+          <input placeholder="eg. https://www.youtube.com/watch?v=ZXsQAXx_ao0" type="text" ng-model="submit.link">
+        </div>
+        <div class="field">
+          <label>Module Code</label>
+          <input placeholder="eg. CS1010" type="text" ng-model="submit.code">
+        </div>
+      </div>
+      <div class="field">
+        <label>Tags</label>
+        <input placeholder="leave blank if you've no tags to suggest" type="text" ng-model="submit.tags">
+      </div>
+
+      <!-- <div class="inline field">
+      <div class="ui checkbox">
       <input type="checkbox" id="terms">
       <label for="terms">I agree to the terms and conditions</label>
     </div>
   </div> -->
   <button ng-disabled="!submit.link || !submit.code" class="ui button" ng-click="suggest()" ng-class="{'youtube': submit.link && submit.code}">
-      <i class="large icons">
-        <i class="youtube play icon"></i>
-        <i class="inverted corner add icon"></i>
-      </i>
-      Suggest Video
+    <i class="large icons">
+      <i class="youtube play icon"></i>
+      <i class="inverted corner add icon"></i>
+    </i>
+    Suggest Video
   </button>
 </form>
 <div ng-if="good" class="ui bottom attached success message">
@@ -98,5 +118,5 @@ Found a great video to share?  </div>
   <i class="warning sign icon"></i>
   Sorry, that link looks invalid! You might want to check it.
 </div>
-  </div>
+</div>
 </div>

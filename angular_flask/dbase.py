@@ -1,6 +1,7 @@
 import os
 import sqlite3
 import json
+from youtube import Youtube
 
 class DBase:
     def __init__(self):
@@ -8,7 +9,7 @@ class DBase:
         self.db_name = "nuslearn.db"
         self.db_path = os.getcwd() + self.file_path + self.db_name
         self.db_is_new = not os.path.exists(self.db_path)
-
+        self.yt = Youtube()
         self.connect()
 
         if self.db_is_new:
@@ -76,10 +77,14 @@ class DBase:
                     module_code = videolinks[0]
                     for videolink in videolinks[1:]:
                         module_name = self.retrieve("select module_name from ModuleTable where module_code=?", (module_code,), True)["module_name"]
-                        # print module_name
                         module_prefix = filter(str.isalpha, module_code[:-1])
-                        # print type(module_code), type(module_name), type(module_prefix), type(videolink)
-                        self.insert("insert into GlobalVideoTable (module_code, module_name, module_prefix, vid_link) values (?, ?, ?, ?)", (module_code, module_name, module_prefix, videolink))
+
+                        #YT retrieval
+                        vidInfo = self.yt.retrieveVideoInfo(videolink)
+
+                        #vid_link needs to be manipulated for it to be displayed on site.
+                        embed_link = videolink.replace("watch?v=", "embed/")
+                        self.insert("insert into GlobalVideoTable (module_code, module_name, module_prefix, vid_link, vid_title, vid_desc, votes) values (?, ?, ?, ?, ?, ?, ?)", (module_code, module_name, module_prefix, vidInfo["vid_id"], vidInfo["title"], vidInfo["description"], 0))
             print "GlobalVideoTable is populated with data"
             self.save()
         except IOError:
