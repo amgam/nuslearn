@@ -50,6 +50,12 @@ class DBase:
         else:
             self.cursor.execute(statement)
 
+    def update(self, statement, variables):
+        if variables:
+            self.cursor.execute(statement, variables)
+        else:
+            self.cursor.execute(statement)
+
     def retrieve(self, statement, variables=False, isSingluar=False):
         if variables:
             self.cursor.execute(statement, variables)

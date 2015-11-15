@@ -16,12 +16,14 @@ from dbase import DBase
 from youtube import Youtube
 from suggest import Suggest
 from search import Search
+from voter import Voter
 
 current_user = None
 dbase = DBase()
 yt = Youtube()
 suggest = Suggest()
 searcher = Search()
+voter = Voter()
 
 # print dbase.retrieve("select * from modules")
 
@@ -116,6 +118,36 @@ def search():
     searchTerm = req["term"]
     global searcher
     return searcher.look(searchTerm)
+
+@app.route('/upvote', methods=['POST'])
+def upvote():
+    req = json.loads(request.data)
+    print req
+    vote = req["upvote"]
+    isSearch = req["searchT"]
+    global voter
+
+    if voter.upvote(vote):
+        if isSearch:
+            return searcher.look(isSearch)
+        else:
+            return current_user.get_videoinfo()
+
+
+@app.route('/downvote', methods=['POST'])
+def downvote():
+    req = json.loads(request.data)
+    print req
+    vote = req["downvote"]
+    isSearch = req["searchT"]
+    global voter
+
+    if voter.downvote(vote):
+        if isSearch:
+            return searcher.look(isSearch)
+        else:
+            return current_user.get_videoinfo()
+
 
 # special file handlers and error handlers
 @app.route('/favicon.ico')

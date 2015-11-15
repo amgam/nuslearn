@@ -83,7 +83,7 @@ class Learner:
 
         for code in mods.keys():
             #retrieve list of YT links associated with this module code
-            retrieveQuery = "select * from GlobalVideoTable where module_code=? order by votes"
+            retrieveQuery = "select * from GlobalVideoTable where module_code=? order by votes desc"
             list_of_mods = self.db.retrieve(retrieveQuery, (code,)) # is a list of SQLite Rows
 
             serializable_info = map(lambda entry: {

@@ -8,7 +8,7 @@
   <div class="right menu">
     <div class="item">
       <div class="ui transparent icon input" ng-if="isSearch">
-        <input type="text" ng-model="searchTerm.term" placeholder="Search..." ng-change="search()">
+        <input type="text" ng-model="searchTerm.term" placeholder="Search..." ng-change="search(searchTerm.term)">
         <i ng-click="clear()" class="remove link icon"  ng-show="searchTerm.term.length >= 1"></i>
       </div>
     </div>
@@ -23,9 +23,9 @@
       <h2>{{code}}</h2>
       <br>
 
-        <p ng-if="!moduleLinks[code].length" class="novideos">
-          We currently do not have videos for this search term. We welcome your suggestions!
-        </p>
+      <p ng-if="!moduleLinks[code].length" class="novideos">
+        We currently do not have videos for this search term. We welcome your suggestions!
+      </p>
 
       <div class="ui link stackable cards">
         <div class="card" ng-repeat="entry in vidInfo">
@@ -52,12 +52,15 @@
         </div>
         <div class="extra content">
           <span class="right floated">
-            <i class="thumbs up icon" ng-click="thumbsup(vid_link)"></i>
-            <i class="thumbs down icon" ng-click="thumbsdown(vid_link)"></i>
+            <button class="ui icon green button" ng-disabled="thumbedup($index)">
+              <i class="thumbs up icon" ng-click="thumbsup(entry.vid_link, searchTerm.term)"></i>
+            </button>
+            <button class="ui icon red button" ng-disabled="thumbeddown($index)">
+              <i class="thumbs down icon" ng-click="thumbsdown(entry.vid_link, searchTerm.term)"></i>
+            </button>
           </span>
           <span>
-            <i class="star icon"></i>
-            {{::entry.votes}} votes
+            {{::entry.votes}} <i class="star icon"></i>
           </span>
         </div>
       </div>

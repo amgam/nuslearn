@@ -45,7 +45,7 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 	.success(function(response) {
 		// console.log(response["CS2108"]);
 		console.log(response);
-		$scope.userModInfo = response;
+		// $scope.userModInfo = response;
 		$scope.moduleLinks = response;
 	});
 
@@ -109,7 +109,7 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 
 	$scope.clear = function() {
 		$scope.searchTerm["term"] = "";
-		$scope.moduleLinks = $scope.userModInfo;
+		$scope.moduleLinks = $scope.search();
 	};
 
 	$scope.search = function(){
@@ -123,47 +123,52 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 			console.log(response);
 
 			if($scope.searchTerm["term"] == ""){
-				//default back to original
-				// alert("bingo!");
-				// console.log($scope.userModInfo);
-				$scope.moduleLinks = $scope.userModInfo;
+				$http.get("/getmodulevideos")
+				.success(function(response) {
+					// console.log(response["CS2108"]);
+					console.log(response);
+					// $scope.userModInfo = response;
+					$scope.moduleLinks = response;
+				});
+
 			}else{
 				$scope.moduleLinks = response;
 			}
 		});
 	};
 
-	$scope.thumbsup = function(vid_link){
 
+	// $scope.thumbs = {};
+	// $scope.thumbs["upvote"] = "";
+	$scope.thumbedup = function(index){
+		
+	};
+
+
+	$scope.thumbsup = function(vid_link, searchT){
 				$http({
 					method: 'POST',
-					url: "/suggest",
-					data: $scope.submit,
+					url: "/upvote",
+					data: {"upvote": vid_link, "searchT": searchT},
 					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 				}).success(function(response){
-					// $scope.suggestionResponse = response;
-
-					$scope.good = false;
-					$scope.modprob = false;
-					$scope.linkprob = false;
-
-					var msg = response["err"];
-
-					if(msg == "good"){
-						$scope.good = true;
-					}else if(msg == "modprob"){
-						$scope.modprob = true;
-					}else{
-						// link prob
-						$scope.linkprob = true;
-					}
-
+					$scope.moduleLinks = response;
+					// $scope.userModInfo = response;
 					console.log(response);
 				});
 	};
 
-	$scope.thumbsdown = function(vid_link){
-
+	$scope.thumbsdown = function(vid_link, searchT){
+		$http({
+			method: 'POST',
+			url: "/downvote",
+			data: {"downvote": vid_link, "searchT": searchT},
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		}).success(function(response){
+			$scope.moduleLinks = response;
+			// $scope.userModInfo = response;
+			console.log(response);
+		});
 	};
 
 }

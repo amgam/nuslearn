@@ -12,7 +12,7 @@ class Search:
 
     def tokenize_search(self, userSearch):
         self.originalMultiSearch = userSearch
-        
+
         if ", " in userSearch:
             self.searchTerms = userSearch.split(", ")
         elif "," in userSearch:
@@ -30,7 +30,7 @@ class Search:
             return False
 
     def get_results_by_module_code(self, module_code):
-        retrieveQuery = "select * from GlobalVideoTable where module_code=?"
+        retrieveQuery = "select * from GlobalVideoTable where module_code=? order by votes desc"
 
         results = self.db.retrieve(retrieveQuery, (module_code, ))
 
@@ -47,7 +47,7 @@ class Search:
         return serializable_info
 
     def get_results_by_tag(self, term):
-        retrieveQuery = "select * from GlobalTagTable where tags=?"
+        retrieveQuery = "select * from GlobalTagTable where tags=? order by votes desc"
         results = self.db.retrieve(retrieveQuery, (term, ))
         serializable_info = map(lambda entry: {
             "tags": entry["tags"],
