@@ -133,4 +133,37 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 		});
 	};
 
+	$scope.thumbsup = function(vid_link){
+
+				$http({
+					method: 'POST',
+					url: "/suggest",
+					data: $scope.submit,
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+				}).success(function(response){
+					// $scope.suggestionResponse = response;
+
+					$scope.good = false;
+					$scope.modprob = false;
+					$scope.linkprob = false;
+
+					var msg = response["err"];
+
+					if(msg == "good"){
+						$scope.good = true;
+					}else if(msg == "modprob"){
+						$scope.modprob = true;
+					}else{
+						// link prob
+						$scope.linkprob = true;
+					}
+
+					console.log(response);
+				});
+	};
+
+	$scope.thumbsdown = function(vid_link){
+
+	};
+
 }
