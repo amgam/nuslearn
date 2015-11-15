@@ -66,7 +66,11 @@ class Learner:
         output = {}
 
         for mod in resp.json()["Results"]:
-            output[mod["CourseCode"]] = mod["CourseName"]
+            print "mod: ", mod["CourseCode"]
+            first_code = mod["CourseCode"].split("/")[-1]
+            lst = self.db.retrieve("select * from ModuleTable where module_code=?", (first_code, ), True)
+            if lst:
+                output[first_code] = mod["CourseName"]
 
         # mods = map(lambda x: {"CourseCode": x["CourseCode"], "CourseName": x["CourseName"]} , resp.json()["Results"])
         self.modules = output
@@ -74,7 +78,7 @@ class Learner:
 
     def get_videoinfo(self):
         mods = self.get_modules() #dict
-
+        print "mods: ", mods
         vidInfo = {}
 
         for code in mods.keys():

@@ -31,6 +31,7 @@ function LoginProxyController($rootScope, $routeParams, $location, $localStorage
 function LoginController($rootScope, $localStorage, $location, $http, $scope, $sce){
 	$rootScope.logged = true;
 
+	$scope.limit = 8;
 	// console.log($localStorage.token);
 	// console.log("success");
 	//get username

@@ -1,5 +1,6 @@
 from dbase import DBase
 import json
+import itertools
 
 class Search:
     def __init__(self):
@@ -8,8 +9,9 @@ class Search:
     def look(self, userSearch):
         self.tokenize_search(userSearch)
         return self.get_results()
-    
+
     def tokenize_search(self, userSearch):
+        self.originalMultiSearch = userSearch
         # example format would be "MA1521, calculus"
         if ", " in userSearch:
             self.searchTerms = userSearch.split(", ")
@@ -27,7 +29,7 @@ class Search:
         else:
             return False
 
-    def get_results_by_module_code(self, code):
+    def get_results_by_module_code(self, module_code):
         retrieveQuery = "select * from GlobalVideoTable where module_code=?"
 
         results = self.db.retrieve(retrieveQuery, (module_code, ))
@@ -46,7 +48,7 @@ class Search:
 
     def get_results_by_tag(self, term):
         retrieveQuery = "select * from GlobalTagTable where tags=?"
-        results = self.db.retrieve(retrieveQuery, (concept, ))
+        results = self.db.retrieve(retrieveQuery, (term, ))
         serializable_info = map(lambda entry: {
             "tags": entry["tags"],
             "vid_link": entry["vid_link"],
@@ -65,6 +67,7 @@ class Search:
         size = len(self.searchTerms)
 
         if size == 1 and self.is_module_code(first_term):
+            print "size 1, is module"
             module_code = first_term.upper()
             module_name = self.db.retrieve("select * from ModuleTable where module_code=?", (module_code, ), True)["module_name"]
             identifier = module_code + " - " + module_name
@@ -74,6 +77,7 @@ class Search:
             return json.dumps(output)
 
         elif size == 1 and not self.is_module_code(first_term):
+            print "size 1, is concept"
             concept = first_term.lower()
 
             output = {}
@@ -82,19 +86,22 @@ class Search:
             return json.dumps(output)
 
         elif size > 1:
-            temp_results = [[] for i in range(size)]
-            output = []
-            identifer = ""
-            for i, term in enumerate(self.searchTerms):
-                if self.if_module_code(term):
-                    temp_results[i] = self.get_results_by_module_code(term.upper())
+            print "multiple"
+            temp_results = []
+            output = {}
+            identifier = ""
+            for term in self.searchTerms:
+                if self.is_module_code(term):
+                    temp_results += self.get_results_by_module_code(term.upper())
                 else:
-                    temp_results[i] = self.get_results_by_tag(term.lower())
-                identifer = "Results: " + term
-            combined = itertools.chain(temp_results)
-            output_with_duplicates = list(combined)
-            output_unique = set(output)
-            output[identifier] = list(output_unique)
+                    temp_results += self.get_results_by_tag(term.lower())
+            # combined = itertools.chain(temp_results)
+            # output_with_duplicates = list(combined)
+            identifier = "Concepts: " + self.originalMultiSearch
+            # output_unique = set(temp_results)
+            print temp_results
+            output_unique = {v['vid_link']:v for v in temp_results}.values()
+            output[identifier] = output_unique
             return json.dumps(output)
         else:
             print "Error: Unable to get results"
