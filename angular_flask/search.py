@@ -26,12 +26,15 @@ class Search:
 
         first_term = self.searchTerms[0]
 
-        if len(self.searchTerms) == 1 and self.is_module_code(first_term):
+        if len(self.searchTerms) == 1 and self.is_module_code(first_term.upper()):
+            module_code = first_term.upper()
+
+
             print "SEARCH TERM IS A MODULE CODE!!!!!"
         #this is a module
             retrieveQuery = "select * from GlobalVideoTable where module_code=?"
 
-            results = self.db.retrieve(retrieveQuery, (first_term, ))
+            results = self.db.retrieve(retrieveQuery, (module_code, ))
 
             serializable_info = map(lambda entry: {
                 "module_code": entry["module_code"],
@@ -44,21 +47,30 @@ class Search:
             }, results)
 
             output = {}
-            output["searchTerm"] = serializable_info
+
+            module_name = self.db.retrieve("select * from ModuleTable where module_code=?", (module_code, ), True)["module_name"]
+            identifier = module_code + " - " + module_name
+
+            output[identifier] = serializable_info
             return json.dumps(output)
 
-        elif (self.searchTerms == 1) and (self.is_module_code(first_term) == False):
+        elif len(self.searchTerms) == 1 and not self.is_module_code(first_term.lower()):
+            concept = first_term.lower()
+
             print "search term is a concept"
             retrieveQuery = "select * from GlobalTagTable where tags=?"
-            results = self.db.retrieve(retrieveQuery, (first_term, ))
+            results = self.db.retrieve(retrieveQuery, (concept, ))
             serializable_info = map(lambda entry: {
                 "tags": entry["tags"],
                 "vid_link": entry["vid_link"],
+                "vid_title": entry["vid_title"],
+                "vid_desc": entry["vid_desc"],
                 "votes": entry["votes"]
             }, results)
 
             output = {}
-            output["searchTerm"] = serializable_info
+            identifier = "Concept: " + concept
+            output[identifier] = serializable_info
             return json.dumps(output)
 
         elif len(self.searchTerms) > 1:

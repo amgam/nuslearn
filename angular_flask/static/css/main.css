@@ -1,3 +1,7 @@
+.wrap{
+	word-wrap: break-word;
+}
+
 .power {
 	padding-top: 8px;
 }

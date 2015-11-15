@@ -101,7 +101,11 @@ class DBase:
                     tag = tokens[0]
                     for token in tokens[1:]:
                         vid_link = token;
-                        self.insert("insert into GlobalTagTable (tags, vid_link, votes) values (?, ?, ?)", (tag, vid_link, 0))
+
+                        #YT retrieval
+                        vidInfo = self.yt.retrieveVideoInfo(token)
+
+                        self.insert("insert into GlobalTagTable (tags, vid_link, vid_title, vid_desc, votes) values (?, ?, ?, ?, ?)", (tag, vidInfo["vid_id"], vidInfo["title"], vidInfo["description"], 0))
             self.save()
             print "GlobalTagTable is populated with tags (socket, programming, java, network) for CS2105"
         except IOError:

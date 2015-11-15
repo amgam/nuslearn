@@ -29,5 +29,7 @@ create table GlobalVideoTable (
 create table GlobalTagTable (
   tags text,
   vid_link text,
+  vid_title text,
+  vid_desc text,
   votes integer
 );

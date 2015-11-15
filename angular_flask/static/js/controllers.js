@@ -44,7 +44,8 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 	.success(function(response) {
 		// console.log(response["CS2108"]);
 		console.log(response);
-		$rootScope.moduleLinks = response;
+		$scope.userModInfo = response;
+		$scope.moduleLinks = response;
 	});
 
 	if($localStorage.token){
@@ -99,8 +100,16 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 		});
 	};
 
+
+
+
 	$scope.searchTerm = {};
 	$scope.searchTerm["term"] = "";
+
+	$scope.clear = function() {
+		$scope.searchTerm["term"] = "";
+		$scope.moduleLinks = $scope.userModInfo;
+	};
 
 	$scope.search = function(){
 		$http({
@@ -111,7 +120,15 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 		}).success(function(response){
 			console.log("search done.");
 			console.log(response);
-			$rootScope.moduleLinks = response;
+
+			if($scope.searchTerm["term"] == ""){
+				//default back to original
+				// alert("bingo!");
+				// console.log($scope.userModInfo);
+				$scope.moduleLinks = $scope.userModInfo;
+			}else{
+				$scope.moduleLinks = response;
+			}
 		});
 	};
 
