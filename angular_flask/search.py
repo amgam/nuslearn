@@ -12,7 +12,7 @@ class Search:
 
     def tokenize_search(self, userSearch):
         self.originalMultiSearch = userSearch
-        # example format would be "MA1521, calculus"
+        
         if ", " in userSearch:
             self.searchTerms = userSearch.split(", ")
         elif "," in userSearch:
@@ -95,10 +95,7 @@ class Search:
                     temp_results += self.get_results_by_module_code(term.upper())
                 else:
                     temp_results += self.get_results_by_tag(term.lower())
-            # combined = itertools.chain(temp_results)
-            # output_with_duplicates = list(combined)
             identifier = "Concepts: " + self.originalMultiSearch
-            # output_unique = set(temp_results)
             print temp_results
             output_unique = {v['vid_link']:v for v in temp_results}.values()
             output[identifier] = output_unique
