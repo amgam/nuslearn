@@ -14,6 +14,9 @@ class Search:
     def tokenize_search(self, userSearch):
         self.originalMultiSearch = userSearch
 
+        if "\"" in userSearch:
+            userSearch = userSearch.replace("\"", "")
+            
         if ", " in userSearch:
             self.searchTerms = userSearch.split(", ")
         elif "," in userSearch:
