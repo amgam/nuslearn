@@ -5,3 +5,12 @@ array https://www.youtube.com/watch?v=3rQRn-7uGaE https://www.youtube.com/watch?
 network https://www.youtube.com/watch?v=kqBmsLvWU14
 tutorial https://www.youtube.com/watch?v=kqBmsLvWU14 https://www.youtube.com/watch?v=vZBCTc9zHtI https://www.youtube.com/watch?v=3u1fu6f8Hto
 math https://www.youtube.com/watch?v=19x213y_uk4 https://www.youtube.com/watch?v=epgwuzzDHsQ https://www.youtube.com/watch?v=kdEQGfeC0SE https://www.youtube.com/watch?v=YmuqoXnCSNI https://www.youtube.com/watch?v=mroRWZujCM0 https://www.youtube.com/watch?v=riXcZT2ICjA https://www.youtube.com/watch?v=fUWqTfkuo7c https://www.youtube.com/watch?v=hIgnece9ins https://www.youtube.com/watch?v=Mj5k_rV4Gz8 https://www.youtube.com/watch?v=P43qNhCj1Gg
+game https://www.youtube.com/watch?v=3Y1WpytiHKE https://www.youtube.com/watch?v=0i7p9DNvtjk https://www.youtube.com/watch?v=brkhuetnJmM https://www.youtube.com/watch?v=UkXI-zPcDIM https://www.youtube.com/watch?v=YGyZX0VoRpI https://www.youtube.com/watch?v=TM_QFmQU_VA https://www.youtube.com/watch?v=z1QZqYuiGa8 https://www.youtube.com/watch?v=9qZwchMuslk
+theory https://www.youtube.com/watch?v=3Y1WpytiHKE https://www.youtube.com/watch?v=0i7p9DNvtjk https://www.youtube.com/watch?v=brkhuetnJmM https://www.youtube.com/watch?v=UkXI-zPcDIM
+prisoner's https://www.youtube.com/watch?v=UkXI-zPcDIM https://www.youtube.com/watch?v=YGyZX0VoRpI
+prisoner https://www.youtube.com/watch?v=UkXI-zPcDIM https://www.youtube.com/watch?v=YGyZX0VoRpI
+dilemma https://www.youtube.com/watch?v=UkXI-zPcDIM https://www.youtube.com/watch?v=YGyZX0VoRpI
+machine https://www.youtube.com/watch?v=-dCtJjlEEgM https://www.youtube.com/watch?v=a5yWr1hr6QY https://www.youtube.com/watch?v=nfWU1EwkwwU https://www.youtube.com/watch?v=Kx9Z3B8rXSo
+learning https://www.youtube.com/watch?v=-dCtJjlEEgM https://www.youtube.com/watch?v=a5yWr1hr6QY https://www.youtube.com/watch?v=nfWU1EwkwwU https://www.youtube.com/watch?v=Kx9Z3B8rXSo
+decision https://www.youtube.com/watch?v=-dCtJjlEEgM https://www.youtube.com/watch?v=a5yWr1hr6QY https://www.youtube.com/watch?v=nfWU1EwkwwU https://www.youtube.com/watch?v=Kx9Z3B8rXSo
+tree https://www.youtube.com/watch?v=-dCtJjlEEgM https://www.youtube.com/watch?v=a5yWr1hr6QY https://www.youtube.com/watch?v=nfWU1EwkwwU https://www.youtube.com/watch?v=Kx9Z3B8rXSo
