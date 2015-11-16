@@ -1,12 +1,15 @@
 from dbase import DBase
 import json
 import itertools
+import nltk
 import re
+from nltk.corpus import stopwords
 
 class Search:
     def __init__(self):
         self.db = DBase()
         self.searchTerms = []
+        self.stoplist = stopwords.words('english')
 
     def look(self, userSearch, matric):
         self.matric = matric
@@ -29,6 +32,8 @@ class Search:
         if len(queries_in_quotes) > 0:
             for query in queries_in_quotes:
                 self.searchTerms.append(query)
+
+        self.searchTerms = self.processed_tokens = [word for word in self.searchTerms if word not in self.stoplist]
 
     def is_module_code(self, term):
         self.db.connect()
