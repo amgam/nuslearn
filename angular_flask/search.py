@@ -1,10 +1,12 @@
 from dbase import DBase
 import json
 import itertools
+import re
 
 class Search:
     def __init__(self):
         self.db = DBase()
+        self.searchTerms = []
 
     def look(self, userSearch, matric):
         self.matric = matric
@@ -15,14 +17,18 @@ class Search:
         self.originalMultiSearch = userSearch
 
         if "\"" in userSearch:
-            userSearch = userSearch.replace("\"", "")
-            
+            queries_in_quotes = re.findall('"([^"]*)"', userSearch)
+
         if ", " in userSearch:
             self.searchTerms = userSearch.split(", ")
         elif "," in userSearch:
             self.searchTerms = userSearch.split(",")
         else:
-            self.searchTerms = userSearch.split(" ")
+            self.searchTerms = userSearch.split()
+
+        if len(queries_in_quotes) > 0:
+            for query in queries_in_quotes:
+                self.searchTerms.append(query)
 
     def is_module_code(self, term):
         self.db.connect()

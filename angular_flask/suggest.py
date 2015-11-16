@@ -1,6 +1,7 @@
 from dbase import DBase
 from youtube import Youtube
 import nltk
+import re
 from nltk.corpus import stopwords
 # from nltk.stem.porter import *
 import json
@@ -14,12 +15,20 @@ class Suggest:
         self.processed_tokens = []
 
     def tokenize(self, tags):
+        if "\"" in tags:
+            queries_in_quotes = re.findall('"([^"]*)"', tags)
+
         if ", " in tags:
-            return tags.split(", ")
+            self.searchTerms = tags.split(", ")
         elif "," in tags:
-            return tags.split(",")
+            self.searchTerms = tags.split(",")
         else:
-            return tags.split()
+            self.searchTerms = tags.split()
+
+        if len(queries_in_quotes) > 0:
+            for query in queries_in_quotes:
+                self.searchTerms.append(query)
+
 
     def is_in_moduledb(self, term):
         self.db.connect()
