@@ -30,7 +30,7 @@ voter = Voter()
 print dbase.retrieve("select * from ModuleTable where module_code=\"UTW1001N\"",False,True)
 # print dbase.retrieve("select * from GlobalVideoTable where module_code=\"CS1010\"")
 print
-print dbase.retrieve("select * from GlobalTagTable where tags=\"socket\"")
+# print dbase.retrieve("select * from GlobalTagTable where tags=\"socket\"")
 # print yt.retrieveVideoInfo("https://www.youtube.com/watch?v=bX3jvD7XFPs")
 # print yt.retrieveVideoInfo("https://www.youtube.com/watch?v=eBas9H7VmXA")
 # print yt.retrieveVideoInfo("youtube")
@@ -132,7 +132,6 @@ def upvote():
 
     print dbase.retrieve("select * from ModuleTable where module_code=\"UTW1001N\"",False,True)["module_name"]
     print dbase.retrieve("select * from VotedVideosTable")
-    print dbase.retrieve("select * from Dummy")
 
 
     if voter.upvote(voteVid):
@@ -154,7 +153,6 @@ def downvote():
 
     print dbase.retrieve("select * from ModuleTable where module_code=\"UTW1001N\"",False,True)["module_name"]
     print dbase.retrieve("select * from VotedVideosTable")
-    print dbase.retrieve("select * from Dummy")
 
     if voter.downvote(voteVid):
         if isSearch:
