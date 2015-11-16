@@ -99,13 +99,20 @@ class Suggest:
         link_code = self.yt.extractID(link)
         vid_info = self.yt.retrieveVideoInfo(link)
         vid_id = vid_info["categoryId"]
+        print "CATERGORY IS ", vid_id
         howto_and_style = 26
         education = 27
 
-        if link_code == -1 or vid_id != howto_and_style or vid_id != education or self.is_in_videodb(vid_id):
+        if link_code == -1 or self.is_in_videodb(vid_id):
             print "LINK PROBLEM"
             response["is_valid"] = False
             response["err"] = "linkprob"
+            return (False, json.dumps(response))
+
+        if vid_id != howto_and_style and vid_id != education:
+            print "NOT EDUCATION"
+            response["is_valid"] = False
+            response["err"] = "not-ed"
             return (False, json.dumps(response))
 
         #how to check if tags are valid, stop_list perhaps

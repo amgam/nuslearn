@@ -111,6 +111,8 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 
 			}else if(msg == "modprob" && $scope.submit.code != ""){
 				$scope.modprob = true;
+			}else if(msg == "not-ed"){
+				$scope.noted = true;
 			}else{
 				// link prob
 				$scope.linkprob = true;
