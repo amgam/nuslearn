@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('nuslearn', ['angularFlaskServices', 'ngStorage', 'ngRoute', 'oblador.lazytube', 'angular.filter']);
+var app = angular.module('nuslearn', ['angularFlaskServices', 'ngAnimate', 'ngStorage', 'ngRoute', 'oblador.lazytube', 'angular.filter']);
 
 app.directive('nonSuckyYoutubeEmbed', function factory() {
 	var directiveDefinitionObject = {

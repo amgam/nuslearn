@@ -77,6 +77,8 @@ class Learner:
         # print
 
     def get_videoinfo(self):
+        self.db.connect()
+
         mods = self.get_modules() #dict
         print "mods: ", mods
         vidInfo = {}
@@ -93,13 +95,21 @@ class Learner:
                 "vid_link": entry["vid_link"],
                 "vid_title": entry["vid_title"],
                 "vid_desc": entry["vid_desc"],
-                "votes": entry["votes"]
+                "votes": entry["votes"],
+                "hasVoted": self.db.retrieve("select * from VotedVideosTable where (vid_link=?) and (matric=?)", (entry["vid_link"], self.matric), True)
             }, list_of_mods)
+
+            for item in serializable_info:
+                if item["hasVoted"]:
+                    item["hasVoted"] = item["hasVoted"]["hasVoted"] # access row
+                else:
+                    item["hasVoted"] = 0;
 
             identifier = self.db.retrieve("select * from ModuleTable where module_code=?", (code,), True)["module_name"]
 
             vidInfo[code + " - " + identifier] = serializable_info
 
+        self.db.close()
         return json.dumps(vidInfo)
 
 
@@ -111,3 +121,32 @@ class Learner:
 
     def get_modules(self):
         return self.modules
+
+    def vote(self, vid_link, is_upvote):
+        #update or ignore
+        self.db.connect()
+
+        print "voted on " + vid_link
+        if is_upvote:
+            print "user upvote"
+            updateQuery = "update or ignore VotedVideosTable set hasVoted = hasVoted + 1 where vid_link=?"
+            insertQuery = "insert or ignore into VotedVideosTable (matric, vid_link, hasVoted) values (?, ?, ?)"
+
+            updateVar = (vid_link,)
+            insertVar = (self.matric, vid_link, 1)
+        else:
+            print "user downvote"
+
+            updateQuery = "update or ignore VotedVideosTable set hasVoted = hasVoted - 1 where vid_link=?"
+            insertQuery = "insert or ignore into VotedVideosTable (matric, vid_link, hasVoted) values (?, ?, ?)"
+
+            updateVar = (vid_link,)
+            insertVar = (self.matric, vid_link, -1)
+
+            # insert into GlobalTagTable (tags, vid_link, vid_title, vid_desc, votes) values (?, ?, ?, ?, ?)
+
+        self.db.update(updateQuery, updateVar)
+        self.db.insert(insertQuery, insertVar)
+
+        self.db.save() #FFFFF
+        self.db.close()

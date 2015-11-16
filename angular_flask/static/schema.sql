@@ -33,3 +33,9 @@ create table GlobalTagTable (
   vid_desc text,
   votes integer
 );
+
+create table VotedVideosTable (
+  matric text,
+  vid_link text,
+  hasVoted integer
+);

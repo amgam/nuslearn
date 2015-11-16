@@ -52,11 +52,11 @@
         </div>
         <div class="extra content">
           <span class="right floated">
-            <button class="ui icon green button" ng-disabled="thumbedup($index)">
-              <i class="thumbs up icon" ng-click="thumbsup(entry.vid_link, searchTerm.term)"></i>
+            <button class="ui icon green button" ng-disabled="entry.hasVoted == 1" ng-click="thumbsup(entry.vid_link, searchTerm.term)">
+              <i class="thumbs up icon"></i>
             </button>
-            <button class="ui icon red button" ng-disabled="thumbeddown($index)">
-              <i class="thumbs down icon" ng-click="thumbsdown(entry.vid_link, searchTerm.term)"></i>
+            <button class="ui icon red button" ng-disabled="entry.hasVoted == -1" ng-click="thumbsdown(entry.vid_link, searchTerm.term)">
+              <i class="thumbs down icon"></i>
             </button>
           </span>
           <span>

@@ -140,8 +140,9 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 
 	// $scope.thumbs = {};
 	// $scope.thumbs["upvote"] = "";
+
 	$scope.thumbedup = function(index){
-		
+		return true;
 	};
 
 

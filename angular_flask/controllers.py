@@ -27,7 +27,7 @@ voter = Voter()
 
 # print dbase.retrieve("select * from modules")
 
-print dbase.retrieve("select * from ModuleTable where module_code=\"UTW1001N\"",False,True)["module_name"]
+print dbase.retrieve("select * from ModuleTable where module_code=\"UTW1001N\"",False,True)
 # print dbase.retrieve("select * from GlobalVideoTable where module_code=\"CS1010\"")
 print
 print dbase.retrieve("select * from GlobalTagTable where tags=\"socket\"")
@@ -54,6 +54,7 @@ print dbase.retrieve("select * from GlobalTagTable where tags=\"socket\"")
 ### SAVE DB BEFORE EXITING #######
 def signal_handler(signal, frame):
     dbase.save()
+    dbase.close()
     print 'quit.'
     sys.exit(0)
 
@@ -117,19 +118,26 @@ def search():
     req = json.loads(request.data)
     searchTerm = req["term"]
     global searcher
-    return searcher.look(searchTerm)
+    return searcher.look(searchTerm, current_user.get_matric())
 
 @app.route('/upvote', methods=['POST'])
 def upvote():
     req = json.loads(request.data)
     print req
-    vote = req["upvote"]
+    voteVid = req["upvote"]
     isSearch = req["searchT"]
     global voter
 
-    if voter.upvote(vote):
+    current_user.vote(voteVid, True)
+
+    print dbase.retrieve("select * from ModuleTable where module_code=\"UTW1001N\"",False,True)["module_name"]
+    print dbase.retrieve("select * from VotedVideosTable")
+    print dbase.retrieve("select * from Dummy")
+
+
+    if voter.upvote(voteVid):
         if isSearch:
-            return searcher.look(isSearch)
+            return searcher.look(isSearch, current_user.get_matric())
         else:
             return current_user.get_videoinfo()
 
@@ -138,13 +146,19 @@ def upvote():
 def downvote():
     req = json.loads(request.data)
     print req
-    vote = req["downvote"]
+    voteVid = req["downvote"]
     isSearch = req["searchT"]
     global voter
 
-    if voter.downvote(vote):
+    current_user.vote(voteVid, False)
+
+    print dbase.retrieve("select * from ModuleTable where module_code=\"UTW1001N\"",False,True)["module_name"]
+    print dbase.retrieve("select * from VotedVideosTable")
+    print dbase.retrieve("select * from Dummy")
+
+    if voter.downvote(voteVid):
         if isSearch:
-            return searcher.look(isSearch)
+            return searcher.look(isSearch, current_user.get_matric())
         else:
             return current_user.get_videoinfo()
 

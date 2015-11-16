@@ -71,6 +71,9 @@ class DBase:
         print "\nsaved!"
         self.conn.commit()
 
+    def close(self):
+        self.conn.close()
+
         # for row in self.cursor.fetchall():
         #     print row
 
