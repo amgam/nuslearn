@@ -2,7 +2,7 @@ from dbase import DBase
 from youtube import Youtube
 import nltk
 from nltk.corpus import stopwords
-from nltk.stem.porter import *
+# from nltk.stem.porter import *
 import json
 
 class Suggest:
@@ -10,7 +10,6 @@ class Suggest:
     def __init__(self):
         self.db = DBase()
         self.yt = Youtube()
-        self.stemmer = PorterStemmer()
         self.stoplist = stopwords.words('english')
         self.processed_tokens = []
 
@@ -44,10 +43,21 @@ class Suggest:
         else:
             return False
 
+    def is_in_videodb(self, vid_id):
+        self.db.connect()
+        retrieveQuery = "select * from GlobalVideoTable where vid_link=?"
+        result = self.db.retrieve(retrieveQuery, (vid_id,), True)
+
+        self.db.close()
+        if result:
+            return True
+        else:
+            return False
+
     def make_tags_valid(self, tags):
         tokens = self.tokenize(tags)
         print "tokens", tags, tokens
-        self.processed_tokens = [self.stemmer.stem(word) for word in tokens if word not in self.stoplist]
+        self.processed_tokens = [word for word in tokens if word not in self.stoplist]
         print "processed_tokens:", self.processed_tokens
         for word in self.processed_tokens:
             if self.is_in_moduledb(word) or self.is_in_tagdb(word):
@@ -77,9 +87,13 @@ class Suggest:
             response["err"] = "modprob"
             return (False, json.dumps(response))
 
-        link_code = Youtube.extractID(link)
+        link_code = self.yt.extractID(link)
+        vid_info = self.yt.retrieveVideoInfo(link)
+        vid_id = vid_info["categoryId"]
+        howto_and_style = 26
+        education = 27
 
-        if link_code == -1:
+        if link_code == -1 or vid_id != howto_and_style or vid_id != education or self.is_in_videodb(vid_id):
             print "LINK PROBLEM"
             response["is_valid"] = False
             response["err"] = "linkprob"
