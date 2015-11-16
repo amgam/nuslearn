@@ -70,6 +70,7 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 	};
 
 	$scope.submit = {};
+	$scope.submit["code"] = "";
 	$scope.submit["tags"] = "";
 
 	$scope.suggest = function() {
@@ -90,7 +91,25 @@ function LoginController($rootScope, $localStorage, $location, $http, $scope, $s
 
 			if(msg == "good"){
 				$scope.good = true;
-			}else if(msg == "modprob"){
+
+				//clear form out
+				$scope.submit.link = "";
+				$scope.submit.code = "";
+				$scope.submit.tags = "";
+
+				$scope.searchTerm["term"] = "";
+				$http.get("/getmodulevideos")
+				.success(function(response) {
+					// console.log(response["CS2108"]);
+					console.log(response);
+					// $scope.userModInfo = response;
+					$scope.moduleLinks = response;
+				});
+
+				$scope.good = false;
+				$scope.isSearch = true;
+
+			}else if(msg == "modprob" && $scope.submit.code != ""){
 				$scope.modprob = true;
 			}else{
 				// link prob

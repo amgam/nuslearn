@@ -22,7 +22,7 @@ class Suggest:
         else:
             return tags.split()
 
-    def is_module_code(self, term):
+    def is_in_moduledb(self, term):
         self.db.connect()
         retrieveQuery = "select * from ModuleTable where module_code=?"
         result = self.db.retrieve(retrieveQuery, (term.upper(),), True)
@@ -46,51 +46,71 @@ class Suggest:
 
     def make_tags_valid(self, tags):
         tokens = self.tokenize(tags)
-        self.processed_tokens = [stemmer.stem(word) for word in tokens if word not in stoplist]
+        print "tokens", tags, tokens
+        self.processed_tokens = [self.stemmer.stem(word) for word in tokens if word not in self.stoplist]
+        print "processed_tokens:", self.processed_tokens
         for word in self.processed_tokens:
-            if word is_module_code() or word is_in_tagdb():
+            if self.is_in_moduledb(word) or self.is_in_tagdb(word):
                 self.processed_tokens.remove(word)
 
+        print "returning tokens:", self.processed_tokens
         return self.processed_tokens
 
     def validate_suggestion(self, link, module_code, tags):
         #error codes
         #1 - wrong module code
         #2 - invalid category, so reject suggestion
+        self.db.connect()
 
         response = {}
 
-        #validate module code first
-        mod_result = self.db.retrieve("select * from ModuleTable where module_code=?", (module_code,))
+        if module_code == "":
+            mod_result = [1] #special case
+        else:
+            #validate module code first
+            mod_result = self.db.retrieve("select * from ModuleTable where module_code=?", (module_code,))
+
 
         if not mod_result:
+            print "MODULE CODE PROBLEM"
             response["is_valid"] = False
             response["err"] = "modprob"
-            return json.dumps(response)
+            return (False, json.dumps(response))
 
-            link_code = Youtube.extractID(link)
+        link_code = Youtube.extractID(link)
 
-            if link_code == -1:
-                response["is_valid"] = False
-                response["err"] = "linkprob"
-                return json.dumps(response)
+        if link_code == -1:
+            print "LINK PROBLEM"
+            response["is_valid"] = False
+            response["err"] = "linkprob"
+            return (False, json.dumps(response))
 
-            #how to check if tags are valid, stop_list perhaps
-            if self.make_tags_valid(tags):
-                response["is_valid"] = True
-                response["err"] = "good"
-                return json.dumps(response)
+        #how to check if tags are valid, stop_list perhaps
+        if self.make_tags_valid(tags):
+            print "IZ GUT"
+            response["is_valid"] = True
+            response["err"] = "good"
+            return (True, json.dumps(response))
 
-        return False
+        print "FAILS ALL??"
+        print mod_result, link_code, self.make_tags_valid(tags)
+        return (False, False)
 
     def insert_suggestion_to_db(self, link, module_code, tags):
-        self.db.connect()
         if self.validate_suggestion(link, module_code, tags):
-            module_name = self.retrieve("select module_name from ModuleTable where module_code=?", (module_code,), True)["module_name"]
-            module_prefix = filter(str.isalpha, module_code[:-1])
-            #YT retrieval
-            vidInfo = self.yt.retrieveVideoInfo(videolink)
-            self.insert("insert into GlobalVideoTable (module_code, module_name, module_prefix, vid_link, vid_title, vid_desc, votes) values (?, ?, ?, ?, ?, ?, ?)", (module_code, module_name, module_prefix, vidInfo["vid_id"], vidInfo["title"], vidInfo["description"], 0))
-            for tag in self.processed_tokens:
-                self.insert("insert into GlobalTagTable (tags, vid_link, vid_title, vid_desc, votes) values (?, ?, ?, ?, ?)", (tag, vidInfo["vid_id"], vidInfo["title"], vidInfo["description"], 0))
+            self.db.connect()
+            if module_code:
+                module_name = self.db.retrieve("select module_name from ModuleTable where module_code=?", (module_code,), True)["module_name"]
+                module_prefix = filter(str.isalpha, str(module_code[:-1]))
+                #YT retrieval
+                vidInfo = self.yt.retrieveVideoInfo(link)
+                self.db.insert("insert into GlobalVideoTable (module_code, module_name, module_prefix, vid_link, vid_title, vid_desc, votes) values (?, ?, ?, ?, ?, ?, ?)", (module_code, module_name, module_prefix, vidInfo["vid_id"], vidInfo["title"], vidInfo["description"], 0))
+                for tag in self.processed_tokens:
+                    self.db.insert("insert into GlobalTagTable (tags, vid_link, vid_title, vid_desc, votes) values (?, ?, ?, ?, ?)", (tag, vidInfo["vid_id"], vidInfo["title"], vidInfo["description"], 0))
+            else:
+                vidInfo = self.yt.retrieveVideoInfo(link)
+                for tag in self.processed_tokens:
+                    self.db.insert("insert into GlobalTagTable (tags, vid_link, vid_title, vid_desc, votes) values (?, ?, ?, ?, ?)", (tag, vidInfo["vid_id"], vidInfo["title"], vidInfo["description"], 0))
+
+        self.db.save()
         self.db.close()

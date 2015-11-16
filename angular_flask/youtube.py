@@ -32,7 +32,7 @@ class Youtube:
 
         return True if categoryId == howto_style or categoryId == education else False
 
-    def retrieveVideoInfo(self, videoLink, charLimit=300):
+    def retrieveVideoInfo(self, videoLink, charLimit=100):
         # ?id=itemId&key=apiKey&fields=items(snippet(title))&part=snippet
         request_url = "https://www.googleapis.com/youtube/v3/videos"
         # auth_details = {'id': "0FECUG7k5gY", 'key': self.api_key, 'fields': "items(snippet(title))&part=snippet"}

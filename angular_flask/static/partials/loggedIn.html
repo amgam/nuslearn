@@ -91,7 +91,7 @@
       </div>
       <div class="field">
         <label>Tags</label>
-        <input placeholder="leave blank if you've no tags to suggest" type="text" ng-model="submit.tags">
+        <input placeholder="eg. algorithms" type="text" ng-model="submit.tags">
       </div>
 
       <!-- <div class="inline field">
@@ -100,7 +100,7 @@
       <label for="terms">I agree to the terms and conditions</label>
     </div>
   </div> -->
-  <button ng-disabled="!submit.link || !submit.code" class="ui button" ng-click="suggest()" ng-class="{'youtube': submit.link && submit.code}">
+  <button ng-disabled="!submit.link && (submit.code == "" || submit.tags == "")" class="ui button" ng-click="suggest()" ng-class="{'youtube': submit.link && (submit.code || submit.tags)}">
     <i class="large icons">
       <i class="youtube play icon"></i>
       <i class="inverted corner add icon"></i>

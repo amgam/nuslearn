@@ -111,7 +111,13 @@ def suggest_video():
     code = req["code"].upper()
     tags = req["tags"]
     global suggest
-    return suggest.validateSuggestion(link, code, tags)
+    isValid, output = suggest.validate_suggestion(link, code, tags)
+
+    if isValid:
+        print "valid suggestion"
+        suggest.insert_suggestion_to_db(link, code, tags)
+
+    return output
 
 @app.route('/search', methods=['POST'])
 def search():
