@@ -12,9 +12,11 @@ class Suggest:
         self.db = DBase()
         self.yt = Youtube()
         self.stoplist = stopwords.words('english')
+        # print "stoplist", self.stoplist
         self.processed_tokens = []
 
     def tokenize(self, tags):
+
         if "\"" in tags:
             queries_in_quotes = re.findall('"([^"]*)"', tags)
 
@@ -25,9 +27,12 @@ class Suggest:
         else:
             self.searchTerms = tags.split()
 
-        if len(queries_in_quotes) > 0:
-            for query in queries_in_quotes:
-                self.searchTerms.append(query)
+        if "\"" in tags:
+            if len(queries_in_quotes) > 0:
+                for query in queries_in_quotes:
+                    self.searchTerms.append(query)
+
+        return self.searchTerms
 
 
     def is_in_moduledb(self, term):
@@ -98,8 +103,8 @@ class Suggest:
 
         link_code = self.yt.extractID(link)
         vid_info = self.yt.retrieveVideoInfo(link)
-        vid_id = vid_info["categoryId"]
-        print "CATERGORY IS ", vid_id
+        vid_id = int(vid_info["categoryId"])
+        print "CATERGORY IS ", type(vid_id)
         howto_and_style = 26
         education = 27
 

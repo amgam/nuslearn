@@ -29,9 +29,10 @@ class Search:
         else:
             self.searchTerms = userSearch.split()
 
-        if len(queries_in_quotes) > 0:
-            for query in queries_in_quotes:
-                self.searchTerms.append(query)
+        if "\"" in userSearch:
+            if len(queries_in_quotes) > 0:
+                for query in queries_in_quotes:
+                    self.searchTerms.append(query)
 
         self.searchTerms = self.processed_tokens = [word for word in self.searchTerms if word not in self.stoplist]
 
@@ -98,8 +99,9 @@ class Search:
 
         print "Getting results..."
 
-        first_term = self.searchTerms[0]
         size = len(self.searchTerms)
+        if size > 0:
+            first_term = self.searchTerms[0]
 
         toReturn = ""
 
